@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login | Taskflow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="flex items-center justify-center h-screen bg-gradient-to-r from-blue-100 to-red-200">
+    <div class="flex rounded-xl bg-gradient-to-r from-lime-50 to-orange-100 w-full max-w-4xl h-auto shadow-lg overflow-hidden">
+        <div class="relative w-1/2">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-lg font-semibold text-white bg-black bg-opacity-30 p-4">
+                <h5 class="text-3xl">Bring Your Task Online</h5>
+                <h5 class="text-xl font-thin mt-2">Welcome to Taskflow</h5>
+            </div>
+            <video src="todo.mp4" autoplay loop muted class="w-full h-full object-cover"></video>
+        </div>
+
+        <div class="w-1/2 flex flex-col gap-6 items-center justify-center p-8">
+            <div class="flex items-center justify-center text-white px-5 py-2 gap-6 rounded-xl bg-black">
+                <h1 id="loginTab" class="text-sm font-bold cursor-pointer px-3 py-1 rounded">Login</h1>
+                <h1 id="signupTab" class="text-sm font-bold cursor-pointer px-3 py-1 rounded">Signup</h1>
+            </div>
+
+            <form class="flex flex-col gap-4 w-full max-w-[80%]" method="post">
+                <div id="fullnameField" class="hidden w-full">
+                    <label for="fullname" class="text-sm font-semibold text-gray-700">Full Name</label>
+                    <input type="text" id="fullname" name="fullname" placeholder="Enter your Full Name"
+                        class="border border-stone-700 py-2 px-4 rounded-lg outline-none bg-transparent text-gray-700 text-base w-full"/>
+                </div>
+
+                <div class="w-full">
+                    <label for="email" class="text-sm font-semibold text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email"
+                        class="border border-stone-700 py-2 px-4 rounded-lg outline-none bg-transparent text-gray-700 text-base w-full"/>
+                </div>
+
+                <div class="w-full">
+                    <label for="password" class="text-sm font-semibold text-gray-700">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password"
+                        class="border border-stone-700 py-2 px-4 rounded-lg outline-none bg-transparent text-gray-700 text-base w-full"/>
+                </div>
+
+                <button id="loginBtn" type="submit"
+                    class="bg-gradient-to-r from-indigo-300 to-purple-300 text-white py-2 px-4 rounded-lg w-full transition">
+                    Login
+                </button>
+                <button id="signupBtn" type="submit"
+                    class="bg-gradient-to-r from-indigo-300 to-purple-300 text-white hidden py-2 px-4 rounded-lg w-full transition">
+                    Signup
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const loginTab = document.getElementById("loginTab");
+        const signupTab = document.getElementById("signupTab");
+        const fullnameField = document.getElementById("fullnameField");
+        const loginBtn = document.getElementById("loginBtn");
+        const signupBtn = document.getElementById("signupBtn");
+
+        function switchToLogin() {
+            loginTab.classList.add("bg-green-500");
+            signupTab.classList.remove("bg-green-500");
+
+            fullnameField.classList.add("hidden");
+            loginBtn.classList.remove("hidden");
+            signupBtn.classList.add("hidden");
+        }
+
+        function switchToSignup() {
+            signupTab.classList.add("bg-green-500");
+            loginTab.classList.remove("bg-green-500");
+
+            fullnameField.classList.remove("hidden");
+            loginBtn.classList.add("hidden");
+            signupBtn.classList.remove("hidden");
+        }
+
+        loginTab.addEventListener("click", switchToLogin);
+        signupTab.addEventListener("click", switchToSignup);
+
+        switchToLogin();
+    </script>
+</body>
+</html>
