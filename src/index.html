@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./output.css" rel="stylesheet">
+    <title>TaskFlow</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="bg-white text-black dark:bg-gray-900 dark:text-white">
+    <div class="w-screen h-screen flex">
+        <div class="w-[20%] h-screen bg-amber-50">
+            <div class="flex items-center py-5 px-3 justify-between">
+                <div class="flex items-center gap-2">
+                    <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
+                        class="w-8 h-8 rounded-full object-cover" alt="" srcset="" />
+                    <h6 class="font-thin text-sm ">Rajeev Ranjan</h6>
+                </div>
+                <div>
+                    <i class="fas fa-chevron-left" class="w-8 h-8 text-black"></i>
+                </div>
+            </div>
+            <div class="flex flex-col px-6 py-4 gap-2">
+                <div id="addTaskBtn" class="flex gap-2 items-center p-2 hover:bg-[#fff6de]">
+                    <i class="fa-solid fa-circle-plus" style="color: #ff3d6e;"></i>
+                    <h3 class="text-base text-[#ff3d6e]">Add Task</h3>
+                </div>
+                <div class="flex gap-2 items-center p-2 hover:bg-[#fff6de]">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #050505; "></i>
+                    <h3 class="text-base font-thin">Search</h3>
+                </div>
+                <div class="flex gap-2 items-center p-2 hover:bg-[#fff6de]">
+                    <i class="fa-solid fa-inbox" style="color: #000000;"></i>
+                    <h3 class="text-base font-thin">Inbox</h3>
+                </div>
+                <div class="flex gap-2 items-center p-2 hover:bg-[#fff6de]"">
+                    <i class=" fa-solid fa-calendar-day" style="color: #000000;"></i>
+                    <h3 class="text-base font-thin">Today</h3>
+                </div>
+            </div>
+        </div>
+        <div class="w-[80%] h-screen bg-gray-50">
+            <div class="relative flex items-center justify-end py-3 px-6">
+                <div>
+                    <i class="fa-solid fa-gear h-10 w-10" id="settingsBtn"></i>
+                </div>
+                <ul id="settingsDropdown" class="absolute left-0 top-full mt-1 w-40 border border-stone-400 rounded-md shadow-md hidden bg-white z-10">
+                    <li id="darkModeToggle" class="px-3 py-2 text-sm hover:bg-gray-200 cursor-pointer" >Dark Mode</li>
+                </ul>
+
+            </div>
+            <div id="taskBox" class="task-box hidden flex mt-20  justify-center">
+                <div class="bg-white shadow-lg px-4 py-3 shadow-neutral-300 rounded-md w-[50vw] h-[15vw] ">
+                    <input type="text" class="outline-none mt-3 w-full text-2xl font-bold" name="newtask" id=""
+                        placeholder="Bring fruits from the market" />
+                    <input type="text" class="outline-none py-2 w-full text-sm font-thin " name="newtask" id=""
+                        placeholder="Description" />
+
+                    <div class="flex mt-2 mb-5 gap-4">
+                        <div class="relative">
+                            <div class="flex gap-2 items-center px-2 py-1 rounded-md border border-stone-400 cursor-pointer" id="dateDropdownBtn">
+                                <i class="fa-solid fa-calendar-day" style="color: #000000;"></i>
+                                <h6 class="text-xs text-gray-500">Date</h6>
+                            </div>
+                        
+                            <div id="dateDropdown" class="absolute left-0 top-full mt-1 w-48 border rounded-md shadow-md hidden bg-white z-10 p-2">
+                                <input type="date" id="calendarInput" class="w-full p-1 border border-gray-300 rounded-md text-sm"/>
+                            </div>
+                        </div>                        
+                        <div class="relative">
+                            <div class="flex gap-2 items-center px-2 py-1 rounded-md border border-stone-400 cursor-pointer" id="priorityDropdownBtn">
+                                <i class="fa-solid fa-flag" style="color: #000000;"></i>
+                                <h6 class="text-xs text-gray-500">Priority</h6>
+                            </div>
+                        
+                            <ul id="priorityDropdown" class="absolute left-0 top-full mt-1 w-40 border border-stone-400 rounded-md shadow-md hidden bg-white z-10">
+                                <li class="px-3 py-2 text-sm hover:bg-gray-200 cursor-pointer" data-value="Low">Low</li>
+                                <li class="px-3 py-2 text-sm hover:bg-gray-200 cursor-pointer" data-value="Medium">Medium</li>
+                                <li class="px-3 py-2 text-sm hover:bg-gray-200 cursor-pointer" data-value="High">High</li>
+                                <li class="px-3 py-2 text-sm hover:bg-gray-200 cursor-pointer" data-value="Urgent">Urgent</li>
+                            </ul>
+                        </div>                        
+                        <div class="relative">
+                            <div id="reminderBtn" class="flex gap-2 items-center px-2 py-1 rounded-md border border-stone-400 cursor-pointer">
+                                <i class="fa-regular fa-clock" style="color: #000000;"></i>
+                                <h6 class="text-xs text-gray-500">Reminders</h6>
+                            </div>
+                            <div id="reminderDropdown" class="absolute left-0 top-full mt-1 w-48 border rounded-md shadow-md hidden bg-white z-10 p-2">
+                                <input type="time" id="timeInput" class="w-full p-1 border border-gray-300 rounded-md text-sm"/>
+                            </div>
+                        </div>
+                                               
+                        <div class="flex gap-2 items-center px-2 py-1 rounded-md border border-stone-400">
+                            <i class="fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                        </div>
+                    </div>
+                    <div class="flex border-t-1 py-2 border-t-gray-500 items-center">
+                        <div class="flex justify-end gap-3">
+                            <button id="cancelTaskBtn" type="button"
+                                class="py-2 px-3 text-sm text-white cursor-pointer bg-red-300 hover:bg-red-400 rounded-lg font-bold">Cancel</button>
+                            <button id="submitBtn" type="submit"
+                                class="py-2 px-3 text-sm text-white cursor-pointer bg-amber-300 hover:bg-amber-400 rounded-lg font-bold">Submit</button>
+
+                            <button type="reset" id="resetBtn" class="ml-3"><i class="fa-solid fa-rotate-left cursor-pointer" style="color: #d83bd3;"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
