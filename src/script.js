@@ -1,185 +1,142 @@
+document.addEventListener("DOMContentLoaded", function () {
+    initializeEventListeners();
 
-function taskBoxPreview() {
+    loadTheme();
+
+    handleFormSubmission();
+});
+
+function initializeEventListeners() {
     const addTaskBtn = document.getElementById("addTaskBtn");
     const taskBox = document.getElementById("taskBox");
     const cancelTaskBtn = document.getElementById("cancelTaskBtn");
-    addTaskBtn.addEventListener("click", () => {
-        taskBox.classList.remove("hidden");
-    })
 
-    cancelTaskBtn.addEventListener("click", () => {
-        taskBox.classList.add("hidden");
-    })
-}
-taskBoxPreview();
+    console.log({ addTaskBtn, taskBox, cancelTaskBtn });
 
-function datePicker() {
-    document.getElementById("dateDropdownBtn").addEventListener("click", function (event) {
-        event.stopPropagation(); // Prevents event bubbling
-        let dropdown = document.getElementById("dateDropdown");
-
-        dropdown.classList.toggle("hidden");
-    });
-
-    document.getElementById("calendarInput").addEventListener("change", function () {
-        document.getElementById("dateDropdownBtn").querySelector("h6").textContent = this.value;
-        document.getElementById("dateDropdown").classList.add("hidden"); // Hide dropdown after selection
-    });
-
-    document.addEventListener("click", function (event) {
-        let dropdown = document.getElementById("dateDropdown");
-        let btn = document.getElementById("dateDropdownBtn");
-
-        if (!btn.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.classList.add("hidden");
-        }
-    });
-}
-datePicker();
-
-function priorityDropdownToggle() {
-    document.querySelector("#priorityDropdownBtn").addEventListener("click", (e) => {
-        e.stopPropagation();
-        let dropdown = document.getElementById("priorityDropdown");
-
-        dropdown.classList.toggle("hidden");
-    });
-
-    document.querySelectorAll("#priorityDropdown li").forEach(item => {
-        item.addEventListener("click", function () {
-            document.getElementById("priorityDropdownBtn").querySelector("h6").textContent = this.dataset.value;
-            document.getElementById("priorityDropdown").classList.add("hidden");
-        })
-    });
-
-    document.addEventListener("click", (e) => {
-        let dropdown = document.getElementById("priorityDropdown");
-        let priorityDropdownBtn = document.getElementById("priorityDropdownBtn");
-
-        if (!priorityDropdownBtn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.add("hidden");
-        }
-    })
-
-}
-priorityDropdownToggle();
-
-
-function reminder(){
-
-    document.getElementById("reminderBtn").addEventListener("click", function () {
-        const dropdown = document.getElementById("reminderDropdown");
-        dropdown.classList.toggle("hidden"); 
-    });
-
-    document.getElementById("timeInput").addEventListener("change", function () {
-        let timeValue = this.value;
-        let [hours, minutes] = timeValue.split(":");
-        hours = parseInt(hours); 
-    
-        let amPm = hours >= 12 ? "PM" : "AM";
-        hours = hours % 12 || 12;
-    
-        let formattedTime = `${hours}:${minutes} ${amPm}`;
-    
-        document.getElementById("reminderBtn").querySelector("h6").textContent = formattedTime;
-        document.getElementById("reminderDropdown").classList.add("hidden");
-    });        
-    
-    document.addEventListener("click", function (event) {
-        const dropdown = document.getElementById("reminderDropdown");
-        const reminderBtn = document.getElementById("reminderBtn");
-    
-        if (!dropdown.contains(event.target) && !reminderBtn.contains(event.target)) {
-            dropdown.classList.add("hidden");
-        }
-    });    
- }
-
-reminder();
-
-function resetBtn() {
-    document.getElementById("resetBtn").addEventListener("click", function () {
-        // Reset Task Title & Description
-        document.querySelector("input[name='newtask']").value = "";
-
-        let descriptionField = document.querySelector("input[name='newtask']:nth-of-type(2)");
-        if (descriptionField) {
-            descriptionField.value = "";
-        }
-
-        // Reset Date (Fix for calendar input)
-        let calendarInput = document.getElementById("calendarInput");
-        if (calendarInput) {
-            calendarInput.value = "";
-            calendarInput.type = "text";
-            calendarInput.type = "date";
-
-            document.getElementById("dateDropdownBtn").querySelector("h6").textContent = "Select Date";
-        }
-
-        document.getElementById("priorityDropdownBtn").querySelector("h6").textContent = "Priority";
-    });
-}
-resetBtn();
-
-function themeToggle() {
-    if (localStorage.getItem("theme") === "dark") {
-        document.documentElement.classList.add("dark");
+    if (addTaskBtn && taskBox && cancelTaskBtn) {
+        addTaskBtn.addEventListener("click", () => toggleVisibility(taskBox, false));
+        cancelTaskBtn.addEventListener("click", () => toggleVisibility(taskBox, true));
     } else {
-        document.documentElement.classList.remove("dark");
+        console.error("One or more elements are missing from the DOM.");
     }
 
-    document.getElementById("settingsBtn").addEventListener("click", function(e) {
-        e.stopPropagation();
-        document.getElementById("settingsDropdown").classList.toggle("hidden");
-    });
+    const calendarInput = document.getElementById("calendarInput");
+    const selectedDate = document.getElementById("selectedDate");
 
-    document.getElementById("darkModeToggle").addEventListener("click", function () {
-        document.documentElement.classList.toggle("dark");
+    console.log({ calendarInput, selectedDate });
 
-        if (document.documentElement.classList.contains("dark")) {
-            localStorage.setItem("theme", "dark");
-        } else {
-            localStorage.setItem("theme", "light");
+    if (calendarInput && selectedDate) {
+        calendarInput.addEventListener("change", () => updateSelectedValue(calendarInput, selectedDate, "Date"));
+    }
+
+    const priorityDropdownBtn = document.getElementById("priorityDropdownBtn");
+    const priorityDropdown = document.getElementById("priorityDropdown");
+    const selectedPriority = document.getElementById("selectedPriority");
+
+    console.log({ priorityDropdownBtn, priorityDropdown, selectedPriority });
+
+    if (priorityDropdownBtn && priorityDropdown && selectedPriority) {
+        priorityDropdownBtn.addEventListener("click", (e) => toggleDropdown(e, priorityDropdown));
+        document.querySelectorAll("#priorityDropdown li").forEach(item => {
+            item.addEventListener("click", () => updateSelectedValue(item, selectedPriority, "Priority", "value"));
+        });
+    }
+}
+
+function toggleVisibility(element, hide) {
+    if (hide) {
+        element.classList.add("hidden");
+    } else {
+        element.classList.remove("hidden");
+    }
+}
+
+function toggleDropdown(event, dropdown) {
+    event.stopPropagation();
+    dropdown.classList.toggle("hidden");
+}
+
+function updateSelectedValue(inputElement, targetElement, defaultValue, customValue = null) {
+    if (customValue) {
+        targetElement.textContent = customValue;
+    } else {
+        targetElement.textContent = inputElement.value || defaultValue;
+    }
+    inputElement.closest(".relative").querySelector(".hidden").classList.add("hidden");
+}
+
+function formatTime(timeString) {
+    if (!timeString) return "";
+    const [hours, minutes] = timeString.split(":");
+    const amPm = hours >= 12 ? "PM" : "AM";
+    return `${hours % 12 || 12}:${minutes} ${amPm}`;
+}
+
+function resetForm(selectedDate, selectedPriority, selectedReminder) {
+    selectedDate.textContent = "Date";
+    selectedPriority.textContent = "Priority";
+    selectedReminder.textContent = "Reminders";
+}
+
+function loadTheme() {
+    if (localStorage.getItem("theme") === "dark") {
+        document.documentElement.classList.add("dark");
+    }
+}
+
+function toggleTheme() {
+    document.documentElement.classList.toggle("dark");
+    localStorage.setItem("theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
+}
+
+function closeDropdowns(event, ...dropdowns) {
+    dropdowns.forEach((dropdown, index) => {
+        if (!dropdown.contains(event.target) && !dropdowns[index + 1]?.contains(event.target)) {
+            dropdown.classList.add("hidden");
         }
     });
 }
-document.addEventListener("DOMContentLoaded", themeToggle);
+
+function handleFormSubmission() {
+    const taskForm = document.getElementById("taskForm");
+
+    taskForm.addEventListener("submit", function (e) {
+        e.preventDefault();
 
 
-function taskSubmit(){
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelector("#submitBtn").addEventListener("click", function (event) {
-            event.preventDefault();
-    
-            let title = document.querySelector("input[name='newtask']").value;
-            let description = document.querySelector("input[placeholder='Description']").value;
-            let due_date = document.getElementById("calendarInput").value;
-            let priority = document.querySelector("#priorityDropdownBtn h6").textContent;
-            let reminder_time = document.getElementById("timeInput").value;
-    
-            let formData = new FormData();
-            formData.append("title", title);
-            formData.append("description", description);
-            formData.append("due_date", due_date);
-            formData.append("priority", priority);
-            formData.append("reminder_time", reminder_time);
-    
-            fetch("http://localhost/save_task.php", {
-                method: "POST",
-                body: formData,
+        const formData = new FormData(this);
+        const title = formData.get("title");
+        const description = formData.get("description");
+        const dueDate = formData.get("due_date");
+        const priority = formData.get("priority");
+        const reminderTime = formData.get("reminder_time");
+
+
+        console.log("Title:", title);
+        console.log("Description:", description);
+        console.log("Due Date:", dueDate);
+        console.log("Priority:", priority);
+        console.log("Reminder Time:", reminderTime);
+
+
+        fetch("http://localhost/toDo/src/save_task.php", {
+            method: "POST",
+            body: formData,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                alert(data.message);
+                if (data.status === "success") {
+
+                    this.reset();
+                    toggleVisibility(document.getElementById("taskBox"), true);
+                    resetForm(
+                        document.getElementById("selectedDate"),
+                        document.getElementById("selectedPriority"),
+                        document.getElementById("selectedReminder")
+                    );
+                }
             })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                    if (data.status === "success") {
-                        document.querySelector("form").reset();
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-        });
+            .catch((error) => console.error("Error:", error));
     });
-    
 }
-taskSubmit();
